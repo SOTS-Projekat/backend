@@ -1,10 +1,8 @@
 package com.sots.backend.Test.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Id;
+import com.sots.backend.User.Model.User;
+import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity
@@ -15,6 +13,10 @@ public class Test {
 
     private String title;
 
-    @OneToMany(mappedBy = "test")
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     private List<Question> questions;
+
+    @ManyToOne
+    @JoinColumn(name = "professor_id")
+    private User professor;
 }

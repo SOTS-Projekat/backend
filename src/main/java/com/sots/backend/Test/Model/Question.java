@@ -1,10 +1,8 @@
 package com.sots.backend.Test.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Question {
@@ -15,6 +13,11 @@ public class Question {
     private String questionText;
 
     @ManyToOne
+    @JoinColumn(name = "test_id")
     private Test test;
+
+    //korekcija
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    private List<Answer> offeredAnswers;
 }
 

@@ -1,19 +1,26 @@
 package com.sots.backend.Test.Model;
 
-import com.sots.backend.User.Model.User;
 import jakarta.persistence.*;
 
 @Entity
-public class Answer {
+public class AnsweredQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "question_id") // korekcija
+    @JoinColumn(name = "result_id")
+    private Result result;
+
+    @ManyToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
-    private String answerText;
+    @ManyToOne
+    @JoinColumn(name = "answer_id")
+    private Answer selectedAnswer;
 
     private boolean isCorrect;
+
 }
+

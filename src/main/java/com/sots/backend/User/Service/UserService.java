@@ -18,9 +18,12 @@ public class UserService  {
     private PasswordEncoder passwordEncoder;
 
     public User registerNewUser(UserRegistrationDTO registrationDTO) {
-        if (userRepository.existsByUsername(registrationDTO.getUsername()) ||
-                userRepository.existsByEmail(registrationDTO.getEmail())) {
-            throw new IllegalArgumentException("Username or email already taken");
+        if (userRepository.existsByUsername(registrationDTO.getUsername())){
+            throw new IllegalArgumentException("Username already taken");
+        }
+
+        if (userRepository.existsByEmail(registrationDTO.getEmail())){
+            throw new IllegalArgumentException("Email already taken");
         }
 
         User user = new User();

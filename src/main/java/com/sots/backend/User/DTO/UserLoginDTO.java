@@ -1,6 +1,7 @@
 package com.sots.backend.User.DTO;
 
 public class UserLoginDTO {
+
     private String username;
     private String password;
 

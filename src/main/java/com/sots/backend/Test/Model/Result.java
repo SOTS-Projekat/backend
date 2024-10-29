@@ -12,9 +12,18 @@ public class Result {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "student_id")
     private User student;
 
-    @OneToMany
-    private List<Question> incorrectAnswers;
+    @ManyToOne
+    @JoinColumn(name = "test_id")
+    private Test test;
+
+    private int score;
+
+    private int totalQuestions;
+
+    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    private List<AnsweredQuestion> answeredQuestions;
 }
 

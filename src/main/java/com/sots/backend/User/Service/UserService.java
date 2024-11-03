@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService  {
     @Autowired
@@ -34,9 +36,12 @@ public class UserService  {
         return userRepository.save(user);
     }
 
-
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public List<User> getAllStudents() {
+        return userRepository.findAllByRole(Role.STUDENT);
     }
 }

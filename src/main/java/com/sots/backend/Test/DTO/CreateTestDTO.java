@@ -13,4 +13,5 @@ import java.util.List;
 public class CreateTestDTO {
     private String title;
     private List<QuestionDTO> questions;
+    private Long proffesorId;
 }

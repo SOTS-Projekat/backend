@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll() // Public access to authentication endpoints
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/user/**").authenticated()
+                        .requestMatchers("/api/result/**").authenticated()
                         .anyRequest().authenticated() // Require authentication for all other endpoints
 
                 )

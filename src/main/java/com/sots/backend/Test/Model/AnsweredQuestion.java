@@ -1,7 +1,15 @@
 package com.sots.backend.Test.Model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class AnsweredQuestion {
     @Id
@@ -16,11 +24,10 @@ public class AnsweredQuestion {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "answer_id")
     private Answer selectedAnswer;
 
-    private boolean isCorrect;
 
 }
 

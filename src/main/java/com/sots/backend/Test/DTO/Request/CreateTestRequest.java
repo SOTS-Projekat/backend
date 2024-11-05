@@ -1,4 +1,4 @@
-package com.sots.backend.Test.DTO;
+package com.sots.backend.Test.DTO.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +10,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateTestDTO {
+public class CreateTestRequest {
     private String title;
-    private List<QuestionDTO> questions;
-    private Long proffesorId;
+    private List<QuestionRequest> questions;
+    private Long professorId;
 }

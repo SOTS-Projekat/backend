@@ -1,4 +1,4 @@
-package com.sots.backend.Test.DTO;
+package com.sots.backend.Test.DTO.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionDTO {
+public class QuestionRequest {
     private String questionText;
-    private List<AnswerDTO> offeredAnswers;
+    private List<AnswerRequest> offeredAnswers;
 }

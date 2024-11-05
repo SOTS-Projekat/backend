@@ -1,5 +1,6 @@
 package com.sots.backend.Test.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "test_id")
+    //@JsonIgnoreProperties({"title", "questions", "professor"})
     private Test test;
 
     //korekcija

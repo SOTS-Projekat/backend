@@ -1,5 +1,6 @@
 package com.sots.backend.Test.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sots.backend.User.Model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,8 @@ public class Answer {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "question_id") // korekcija
+    @JoinColumn(name = "question_id")
+    //@JsonIgnoreProperties({"questionText", "test"})
     private Question question;
 
     private String answerText;

@@ -1,4 +1,4 @@
-package com.sots.backend.Test.DTO;
+package com.sots.backend.Test.DTO.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnswerDTO {
+public class AnswerResponse {
+    private Long id;
     private String answerText;
     private boolean isCorrect;
 }

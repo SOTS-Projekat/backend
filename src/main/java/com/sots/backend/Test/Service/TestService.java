@@ -34,6 +34,10 @@ public class TestService {
         return testRepository.findById(savedTest.getId()).orElseThrow();
     }
 
+    public Optional<Test> getById(Long id){
+        return testRepository.findById(id);
+    }
+
     private List<Question> linkTestToQuestions(List<Question> questions, Test t){
         List<Question> retList = new ArrayList<>();
         for(Question q : questions){

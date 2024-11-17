@@ -16,7 +16,6 @@ public class UserRegistrationDTO {
     @NotBlank(message = "Password is required")
     private String password;
 
-
     public String getEmail() {
         return email;
     }

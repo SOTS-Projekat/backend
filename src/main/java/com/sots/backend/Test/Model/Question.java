@@ -30,5 +30,9 @@ public class Question {
     //korekcija
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> offeredAnswers;
+
+    @ManyToOne
+    @JoinColumn(name = "node_id", nullable = false)
+    private Node node;
 }
 

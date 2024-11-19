@@ -63,6 +63,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/user/**").authenticated()
                         .requestMatchers("/api/result/**").authenticated()
+                        .requestMatchers("/api/knowledgeDomain/**").authenticated()
+                        .requestMatchers("/api/link/**").authenticated()
+                        .requestMatchers("/api/node/**").authenticated()
                         .anyRequest().authenticated() // Require authentication for all other endpoints
 
                 )

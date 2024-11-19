@@ -1,11 +1,10 @@
-package com.sots.backend.Test.DTO.Request;
-
-import java.util.List;
+package com.sots.backend.KnowledgeDomain.DTO;
 
 public class NodeRequest {
     private String label;
     private double x;
     private double y;
+    private Long knowledgeDomainId;
     //private List<Long> questionIds;
 
     public String getLabel() {
@@ -18,5 +17,9 @@ public class NodeRequest {
 
     public double getY() {
         return y;
+    }
+
+    public Long getKnowledgeDomainId() {
+        return knowledgeDomainId;
     }
 }

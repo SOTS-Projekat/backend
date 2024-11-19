@@ -1,7 +1,7 @@
 package com.sots.backend.Test.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sots.backend.KnowledgeDomain.Model.Node;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -4,6 +4,7 @@ import com.sots.backend.User.DTO.UserRegistrationDTO;
 import com.sots.backend.User.Model.Role;
 import com.sots.backend.User.Model.User;
 import com.sots.backend.User.Repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,4 +50,12 @@ public class UserService  {
     public List<User> getAllStudents() {
         return userRepository.findAllByRole(Role.STUDENT);
     }
+
+    public User getProfessorByUsername(String username) {
+        return userRepository.findByUsernameAndRole(username, Role.PROFESSOR)
+                .orElseThrow(() -> new EntityNotFoundException("Professor not found with username: " + username));
+    }
+
+
+
 }

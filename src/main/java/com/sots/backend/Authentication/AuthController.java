@@ -45,7 +45,7 @@ public class  AuthController {
             );
 
             User user = userService.findByUsername(loginDTO.getUsername());
-            System.out.println(user);
+            //System.out.println(user);
             String token = jwtUtil.generateToken(user.getUsername(), user.getRole().toString());
             return ResponseEntity.ok( token);
 

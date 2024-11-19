@@ -1,5 +1,6 @@
-package com.sots.backend.Test.Model;
+package com.sots.backend.KnowledgeDomain.Model;
 
+import com.sots.backend.Test.Model.Question;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,7 @@ public class Node {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String Label;
+    private String label;
     private double x;
     private double y; //    Koordinate na frontu
 
@@ -32,7 +33,7 @@ public class Node {
 
 
     public void setLabel(String label) {
-        Label = label;
+        this.label = label;
     }
 
     public void setX(double x) {
@@ -45,5 +46,9 @@ public class Node {
 
     public void setKnowledgeDomain(KnowledgeDomain knowledgeDomain) {
         this.knowledgeDomain = knowledgeDomain;
+    }
+
+    public KnowledgeDomain getKnowledgeDomain() {
+        return knowledgeDomain;
     }
 }

@@ -1,6 +1,7 @@
 package com.sots.backend.User.Model;
 
-import com.sots.backend.Test.Model.KnowledgeDomain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sots.backend.KnowledgeDomain.Model.KnowledgeDomain;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -28,8 +29,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)  // No mappedBy because the relationship is unidirectional
-    @JoinColumn(name = "user_id")  // This specifies the foreign key in the KnowledgeDomain table
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<KnowledgeDomain> professorDomains;
 
     public Role getRole() {
@@ -54,10 +55,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {

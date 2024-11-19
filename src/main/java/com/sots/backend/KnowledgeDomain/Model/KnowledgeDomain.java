@@ -1,5 +1,6 @@
-package com.sots.backend.Test.Model;
+package com.sots.backend.KnowledgeDomain.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sots.backend.User.Model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,18 +22,15 @@ public class KnowledgeDomain {
     private Long id;
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "professor_id", nullable = false)
+    private User professor;
+
     @OneToMany(mappedBy = "knowledgeDomain", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Node> nodesInDomain;
 
     @OneToMany(mappedBy = "knowledgeDomain", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Link> linksInDomain;
-
-
-
-//    public KnowledgeDomain(Long id, String name) {
-//        this.id = id;
-//        this.name = name;
-//    }
 
     public Long getId() {
         return id;
@@ -48,6 +46,10 @@ public class KnowledgeDomain {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setProfessor(User professor) {
+        this.professor = professor;
     }
 
     public List<Node> getNodesInDomain() {

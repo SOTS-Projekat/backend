@@ -19,12 +19,6 @@ public class KnowledgeDomainService {
     private KnowledgeDomainRepository knowledgeDomainRepository;
 
     @Autowired
-    private NodeRepository nodeRepository;
-
-    @Autowired
-    private LinkRepository linkRepository;
-
-    @Autowired
     private UserService userService;
 
     public KnowledgeDomain createEmptyKnowledgeDomain(String name, String professorUsername) {

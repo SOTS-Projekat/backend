@@ -22,6 +22,7 @@ public class LinkService {
     NodeRepository nodeRepository;
 
     public Link createLink(Long sourceNodeId, Long targetNodeId) {
+
         Link link = new Link();
 
         Node sourceNode = nodeRepository.findById(sourceNodeId)

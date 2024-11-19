@@ -46,7 +46,7 @@ public class  AuthController {
 
             User user = userService.findByUsername(loginDTO.getUsername());
             //System.out.println(user);
-            String token = jwtUtil.generateToken(user.getUsername(), user.getRole().toString());
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole().toString(), user.getId());
             return ResponseEntity.ok( token);
 
         } catch (AuthenticationException e) {

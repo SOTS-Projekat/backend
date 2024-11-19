@@ -9,4 +9,6 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
 
     @Query("SELECT COUNT(n) > 0 FROM Node n WHERE LOWER(n.label) = LOWER(:label)")
     boolean existsByLabelIgnoreCase(@Param("label") String label);
+
+    Node findByFrontendId(String frontendId);
 }

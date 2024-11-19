@@ -1,5 +1,6 @@
 package com.sots.backend.KnowledgeDomain.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sots.backend.Test.Model.Question;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,37 +19,14 @@ public class Node {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String label;
-    private double x;
-    private double y; //    Koordinate na frontu
 
-    @OneToMany(mappedBy = "node")
-    private List<Question> questionsInNode;
+    @Column(unique = true, nullable = false)
+    private String frontendId;
+
+    private String label;
 
     @ManyToOne
     @JoinColumn(name = "knowledge_domain_id")
+    @JsonBackReference // Sprečava beskonačno ugnježđavanje
     private KnowledgeDomain knowledgeDomain;
-
-    //Da li dodati listu veza (kako bi se znalo sa kojim cvorovima je povezano)
-
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public void setKnowledgeDomain(KnowledgeDomain knowledgeDomain) {
-        this.knowledgeDomain = knowledgeDomain;
-    }
-
-    public KnowledgeDomain getKnowledgeDomain() {
-        return knowledgeDomain;
-    }
 }

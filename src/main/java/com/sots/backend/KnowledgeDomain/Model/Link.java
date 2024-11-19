@@ -1,5 +1,6 @@
 package com.sots.backend.KnowledgeDomain.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class Link {
 
     private String label;
 
-    @ManyToOne  //  Posto svaki link ima 2 node, pocetni i krajnji
+    @ManyToOne
     @JoinColumn(name = "source_node_id", nullable = false)
     private Node sourceNode;
 
@@ -30,21 +31,6 @@ public class Link {
 
     @ManyToOne
     @JoinColumn(name = "knowledge_domain_id", nullable = false)
-    private KnowledgeDomain knowledgeDomain;    //  Ovo je verovatno nepotrebno obzirom da ima ime dva cvora koja povezuje, pa moze od njih uzeti u kom se prostoru nalazi
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setSourceNode(Node sourceNode) {
-        this.sourceNode = sourceNode;
-    }
-
-    public void setTargetNode(Node targetNode) {
-        this.targetNode = targetNode;
-    }
-
-    public void setKnowledgeDomain(KnowledgeDomain knowledgeDomain) {
-        this.knowledgeDomain = knowledgeDomain;
-    }
+    @JsonBackReference // Sprečava beskonačno ugnježđavanje
+    private KnowledgeDomain knowledgeDomain;
 }

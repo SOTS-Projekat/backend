@@ -1,9 +1,5 @@
 package com.sots.backend.KnowledgeDomain.Controller;
 
-import com.sots.backend.KnowledgeDomain.DTO.LinkRequest;
-import com.sots.backend.KnowledgeDomain.Model.KnowledgeDomain;
-import com.sots.backend.KnowledgeDomain.Model.Link;
-import com.sots.backend.KnowledgeDomain.Service.KnowledgeDomainService;
 import com.sots.backend.KnowledgeDomain.Service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +11,10 @@ public class LinksController {
     @Autowired
     private LinkService linkService;
 
-    @PostMapping("/create")
-    public Link createLink(@RequestBody LinkRequest linkDTO) {
-        return linkService.createLink(linkDTO.getSourceNodeId(), linkDTO.getTargetNodeId());
-    }
+//    @PostMapping("/create")
+//    public Link createLink(@RequestBody LinkRequest linkDTO) {
+//        return linkService.createLink(linkDTO.getSourceNodeId(), linkDTO.getTargetNodeId());
+//    }
 
     @DeleteMapping("/delete/{id}")
     public void deleteLink(@PathVariable Long id) {

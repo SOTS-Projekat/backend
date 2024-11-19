@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface KnowledgeDomainRepository extends JpaRepository<KnowledgeDomain, Long> {
 
     @Query("SELECT COUNT(d) > 0 FROM KnowledgeDomain d WHERE LOWER(d.name) = LOWER(:name)")
     boolean existsByNameIgnoreCase(@Param("name") String name);
 
     //boolean existsByName(String name);
+    List<KnowledgeDomain> findAllByProfessorId(Long id);
 }

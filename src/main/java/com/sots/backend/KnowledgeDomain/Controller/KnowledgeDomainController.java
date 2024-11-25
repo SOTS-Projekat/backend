@@ -28,8 +28,14 @@ public class KnowledgeDomainController {
         return ResponseEntity.ok(knowledgeDomainResponse);
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<List<KnowledgeDomainResponse>> getAllKnowledgeDomains(@PathVariable Long id){
+        List<KnowledgeDomainResponse> knowledgeDomainResponses = knowledgeDomainService.getAll(id);
+        return ResponseEntity.ok(knowledgeDomainResponses);
+    }
+
+    @GetMapping("/getForTestCreation/{id}")
+    public ResponseEntity<List<KnowledgeDomainResponse>> getAllKnowledgeDomainsForTestCreation(@PathVariable Long id){
         List<KnowledgeDomainResponse> knowledgeDomainResponses = knowledgeDomainService.getAll(id);
         return ResponseEntity.ok(knowledgeDomainResponses);
     }

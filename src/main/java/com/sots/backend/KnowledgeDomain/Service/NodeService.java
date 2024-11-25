@@ -16,6 +16,10 @@ public class NodeService {
     @Autowired
     KnowledgeDomainRepository knowledgeDomainRepository;
 
+    public Node getById(Long id){
+        return nodeRepository.getById(id);
+    }
+
 //    public Node createNode(String label, double x, double y, Long knowledgeDomainId) {
 //
 //        if (nodeRepository.existsByLabelIgnoreCase(label)) {

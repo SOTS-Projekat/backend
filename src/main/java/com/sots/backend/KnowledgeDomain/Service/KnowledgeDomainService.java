@@ -69,6 +69,17 @@ public class KnowledgeDomainService {
         return knowledgeDomainResponses;
     }
 
+    public List<KnowledgeDomainResponse> getAllForTestCreation(Long professorId){
+        List<KnowledgeDomain> knowledgeDomains = knowledgeDomainRepository.findAllByProfessorId(professorId);
+        List<KnowledgeDomainResponse> knowledgeDomainResponses = new ArrayList<>();
+
+        for(KnowledgeDomain kd : knowledgeDomains){
+            knowledgeDomainResponses.add(mapKnowledgeDomainToDTO(kd));
+        }
+
+        return knowledgeDomainResponses;
+    }
+
     public KnowledgeDomainResponse save(KnowledgeDomainRequest request){
         User professor = userRepository.findById(Long.parseLong(request.getProfessorId()))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

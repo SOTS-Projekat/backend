@@ -12,5 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestionRequest {
     private String questionText;
+    private Long connectedNodeId;
     private List<AnswerRequest> offeredAnswers;
 }

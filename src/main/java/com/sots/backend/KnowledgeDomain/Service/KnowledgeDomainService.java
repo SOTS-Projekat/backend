@@ -177,6 +177,12 @@ public class KnowledgeDomainService {
         knowledgeDomainRepository.deleteById(id);
     }
 
+    public KnowledgeDomainResponse findById(Long id) {
+        KnowledgeDomain knowledgeDomain = knowledgeDomainRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Domain not found with id: " + id));
+
+        return mapKnowledgeDomainToDTO(knowledgeDomain);
+    }
 
 
     //  Metoda za vezivanje pitanja za cvor

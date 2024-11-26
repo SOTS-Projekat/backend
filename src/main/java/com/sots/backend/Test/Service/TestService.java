@@ -56,4 +56,8 @@ public class TestService {
             }
         }
     }
+
+    public List<Test> getAll() {
+        return testRepository.findAll();
+    }
 }

@@ -45,5 +45,11 @@ public class KnowledgeDomainController {
         knowledgeDomainService.deleteKnowledgeDomain(id);
     }
 
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<KnowledgeDomainResponse> findById(@PathVariable Long id) {
+            KnowledgeDomainResponse domain = knowledgeDomainService.findById(id);
+            return ResponseEntity.ok(domain);
+    }
+
 
 }

@@ -47,4 +47,14 @@ public class TestController {
         }
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<TestResponse>> getAll() {
+        List<Test> tests = testService.getAll();
+        List<TestResponse> testResponses = tests.stream()
+                .map(TestMapper::toTestResponse)
+                .toList();
+
+        return ResponseEntity.ok(testResponses);
+    }
+
 }

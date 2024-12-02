@@ -18,8 +18,12 @@ public class QuestionMapper {
     public List<Question> questionDtoToList(List<QuestionRequest> dtoList){
         List<Question> retList = new ArrayList<>();
         for(QuestionRequest q : dtoList){
-            Node node = nodeService.getById(q.getConnectedNodeId());
-            retList.add(Question.builder().questionText(q.getQuestionText()).node(node).build());
+            if(q.getConnectedNodeId() == null){
+                retList.add(Question.builder().questionText(q.getQuestionText()).node(null).build());
+            }else{
+                Node node = nodeService.getById(q.getConnectedNodeId());
+                retList.add(Question.builder().questionText(q.getQuestionText()).node(node).build());
+            }
         }
         return retList;
     }

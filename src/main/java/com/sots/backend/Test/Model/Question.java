@@ -32,7 +32,7 @@ public class Question {
     private List<Answer> offeredAnswers;
 
     @ManyToOne
-    @JoinColumn(name = "node_id", nullable = false)
+    @JoinColumn(name = "node_id", nullable = true)
     private Node node;
 }
 

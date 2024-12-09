@@ -13,5 +13,6 @@ import java.util.List;
 public class CreateTestRequest {
     private String title;
     private List<QuestionRequest> questions;
+    private Long knowledgeDomainId;
     private Long professorId;
 }

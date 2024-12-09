@@ -1,5 +1,7 @@
 package com.sots.backend.Test.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sots.backend.KnowledgeDomain.Model.KnowledgeDomain;
 import com.sots.backend.User.Model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,4 +29,9 @@ public class Test {
     @ManyToOne
     @JoinColumn(name = "professor_id")
     private User professor;
+
+    @ManyToOne
+    @JoinColumn(name = "knowledge_domain_id")
+    @JsonIgnore
+    private KnowledgeDomain knowledgeDomain;
 }

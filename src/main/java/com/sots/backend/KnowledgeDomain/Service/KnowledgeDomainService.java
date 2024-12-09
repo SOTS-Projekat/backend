@@ -1,5 +1,6 @@
 package com.sots.backend.KnowledgeDomain.Service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sots.backend.KnowledgeDomain.DTO.Request.KnowledgeDomainRequest;
 import com.sots.backend.KnowledgeDomain.DTO.Request.LinkRequest;
 import com.sots.backend.KnowledgeDomain.DTO.Request.NodeRequest;
@@ -13,15 +14,25 @@ import com.sots.backend.KnowledgeDomain.Model.Node;
 import com.sots.backend.KnowledgeDomain.Repository.KnowledgeDomainRepository;
 import com.sots.backend.KnowledgeDomain.Repository.LinkRepository;
 import com.sots.backend.KnowledgeDomain.Repository.NodeRepository;
+import com.sots.backend.Test.Model.AnsweredQuestion;
+import com.sots.backend.Test.Model.Result;
+import com.sots.backend.Test.Model.Test;
+import com.sots.backend.Test.Repository.ResultRepository;
+import com.sots.backend.Test.Repository.TestRepository;
 import com.sots.backend.User.Model.User;
 import com.sots.backend.User.Repository.UserRepository;
 import com.sots.backend.User.Service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -29,34 +40,116 @@ public class KnowledgeDomainService {
 
     @Autowired
     private KnowledgeDomainRepository knowledgeDomainRepository;
-
+    @Autowired
+    private TestRepository testRepository;
     @Autowired
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private NodeRepository nodeRepository;
-
     @Autowired
     private LinkRepository linkRepository;
+    @Autowired
+    private ResultRepository resultRepository;
+    @Autowired
+    private KSFlaskService ksFlaskService;
+    @Transactional
+    public KnowledgeDomainResponse getRealKnowledgeDomain(Long id){
+        KnowledgeDomain knowledgeDomain = testRepository.findKnowledgeDomainByTestId(id);
+        List<Result> resultList = resultRepository.findAllByTestId(id);
+        int[][] matrix = generateMatrix(resultList);
 
-//    public KnowledgeDomain createEmptyKnowledgeDomain() {
-//
-//        if (knowledgeDomainRepository.existsByNameIgnoreCase(name)) {
-//            throw new IllegalArgumentException("A domain with this name already exists");
-//        }
-//
-//        User professor = userRepository.getById()
-//        if (professor == null || professor.getRole() != Role.PROFESSOR) {
-//            throw new IllegalArgumentException("Invalid professor username");
-//        }
-//
-//        KnowledgeDomain knowledgeDomain = new KnowledgeDomain();
-//        knowledgeDomain.setName(name);
-//        knowledgeDomain.setProfessor(professor);
-//
-//        return knowledgeDomainRepository.save(knowledgeDomain);
-//    }
+        int[][] result = ksFlaskService.getIITAImplications(matrix).block();
+
+        if (result == null) {
+            throw new RuntimeException("IITA call failed!");
+        }
+
+        KnowledgeDomain realKnowledgeDomain = generateRealKnowledgeDomainFromImplications(result, resultList);
+
+        if(knowledgeDomainRepository.existsRealKnowledgeDomainByName(knowledgeDomain.getName().concat("_REAL"))){
+            KnowledgeDomain existingRealKnowledgeDomain = knowledgeDomainRepository.findByName(realKnowledgeDomain.getName());
+            linkRepository.deleteLinksByKnowledgeDomainId(existingRealKnowledgeDomain.getId());
+            knowledgeDomainRepository.deleteRealKnowledgeDomainByName(knowledgeDomain.getName().concat("_REAL"));
+        }
+
+        knowledgeDomainRepository.save(realKnowledgeDomain);
+
+        return mapKnowledgeDomainToDTO(realKnowledgeDomain);
+    }
+
+    private List<Node> getSortedNodesFromResults(List<Result> results){
+        Result result = results.get(0);
+        List<Node> nodes = new ArrayList<>();
+        List<AnsweredQuestion> answeredQuestionList = result.getAnsweredQuestions();
+        Collections.sort(answeredQuestionList, Comparator.comparing(AnsweredQuestion::getId));
+        for(AnsweredQuestion aq : answeredQuestionList){
+            nodes.add(aq.getQuestion().getNode());
+        }
+        return nodes;
+    }
+
+    private KnowledgeDomain generateRealKnowledgeDomainFromImplications(int[][] implications, List<Result> results) {
+        List<Node> nodes = getSortedNodesFromResults(results);
+
+        KnowledgeDomain knowledgeDomain = new KnowledgeDomain();
+        knowledgeDomain.setNodesInDomain(nodes);
+        knowledgeDomain.setReal(true);
+        knowledgeDomain.setName(results.get(0).getTest().getKnowledgeDomain().getName().concat("_REAL"));
+        knowledgeDomain.setDescription(results.get(0).getTest().getKnowledgeDomain().getDescription().concat(" (Realan prostor znanja)"));
+        knowledgeDomain.setCreatedAt(LocalDate.now());
+        knowledgeDomain.setProfessor(results.get(0).getTest().getKnowledgeDomain().getProfessor());
+
+        List<Link> links = new ArrayList<>();
+
+        for (int[] implication : implications) {
+            int sourceIndex = implication[0];
+            int targetIndex = implication[1];
+
+            Node sourceNode = nodes.get(sourceIndex);
+            Node targetNode = nodes.get(targetIndex);
+
+            Link link = Link.builder()
+                    .label("Implication") // Opcionalni label
+                    .sourceNode(sourceNode)
+                    .targetNode(targetNode)
+                    .knowledgeDomain(knowledgeDomain) // Veza pripada ovom domenu
+                    .build();
+
+            links.add(link);
+        }
+
+        knowledgeDomain.setLinksInDomain(links);
+
+        return knowledgeDomain;
+    }
+
+
+    private int[][] generateMatrix(List<Result> results) {
+        int rows = results.size();
+        int cols = results.get(0).getAnsweredQuestions().size();
+
+        int[][] matrix = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            Result result = results.get(i);
+
+            for (int j = 0; j < cols; j++) {
+                List<AnsweredQuestion> answeredQuestionList = result.getAnsweredQuestions();
+                Collections.sort(answeredQuestionList, Comparator.comparing(AnsweredQuestion::getId));
+                AnsweredQuestion answeredQuestion = answeredQuestionList.get(j);
+
+                if (answeredQuestion.getSelectedAnswer() != null && answeredQuestion.getSelectedAnswer().isCorrect()) {
+                    matrix[i][j] = 1;
+                } else {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+        return matrix;
+    }
 
     public List<KnowledgeDomainResponse> getAll(Long professorId){
         List<KnowledgeDomain> knowledgeDomains = knowledgeDomainRepository.findAllByProfessorId(professorId);
@@ -182,6 +275,13 @@ public class KnowledgeDomainService {
                 .orElseThrow(() -> new UsernameNotFoundException("Domain not found with id: " + id));
 
         return mapKnowledgeDomainToDTO(knowledgeDomain);
+    }
+
+    public KnowledgeDomain findKDById(Long id) {
+        KnowledgeDomain knowledgeDomain = knowledgeDomainRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Domain not found with id: " + id));
+
+        return knowledgeDomain;
     }
 
 

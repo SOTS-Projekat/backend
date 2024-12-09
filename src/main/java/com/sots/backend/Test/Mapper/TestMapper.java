@@ -1,5 +1,7 @@
 package com.sots.backend.Test.Mapper;
 
+import com.sots.backend.KnowledgeDomain.Model.KnowledgeDomain;
+import com.sots.backend.KnowledgeDomain.Service.KnowledgeDomainService;
 import com.sots.backend.Test.DTO.Request.CreateTestRequest;
 import com.sots.backend.Test.DTO.Response.*;
 import com.sots.backend.Test.Model.Answer;
@@ -20,12 +22,16 @@ public class TestMapper {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private KnowledgeDomainService knowledgeDomainService;
     @Autowired
     private QuestionMapper questionMapper;
     public Test createTestDTOtoEntity(CreateTestRequest dto){
         //Promjeni proffesor id
         User professor = userService.findById(1L);
-        return Test.builder().title(dto.getTitle()).professor(professor)
+        KnowledgeDomain knowledgeDomain = knowledgeDomainService.findKDById(dto.getKnowledgeDomainId());
+        return Test.builder().title(dto.getTitle()).professor(professor).knowledgeDomain(knowledgeDomain)
         .build();
     }
 

@@ -51,5 +51,11 @@ public class KnowledgeDomainController {
             return ResponseEntity.ok(domain);
     }
 
+    @GetMapping("/getRealKnowledgeDomain/{id}")
+    public ResponseEntity<KnowledgeDomainResponse> getRealKnowledgeDomain(@PathVariable Long id) {
+        KnowledgeDomainResponse domain = knowledgeDomainService.getRealKnowledgeDomain(id);
+        return ResponseEntity.ok(domain);
+    }
+
 
 }

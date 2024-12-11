@@ -1,0 +1,11 @@
+INSERT INTO node (id, frontend_id, label, knowledge_domain_id) VALUES
+(1, '7230e047-1e08-438d-b24b-1b5eeb5b5c97', 'Promjenjive i tipovi podataka', 1),
+(2, '80d1898b-8c17-48d9-8df2-b24f1ced7f2b', 'Operatori i izrazi', 1),
+(3, 'f689e9c1-7366-4fb0-bd50-98100b6ef394', 'Uslovne strukture', 1),
+(4, '9cf3203b-c181-45ce-be84-c78478dcd387', 'Petlje', 1),
+(5, 'f3440cbc-e96f-4ae2-a1fc-17891a53a73e', 'Funkcije', 1),
+(6, '48eb335b-de1b-467e-8b7b-a3b327b1b260', 'Nizovi', 1),
+(7, '13b8d09b-2390-4486-9396-fb65720e1bb2', 'Rad sa fajlovima', 1),
+(8, '990092f6-8627-4d7f-be92-871d4576ce86', 'Osnovne strukture podataka', 1),
+(9, 'dd8cf318-83e6-4268-875c-7f2604ef36f2', 'Rekurzija', 1),
+(10, '85aca6fb-ff3e-491a-896f-0bf7bae1128f', 'Algoritmi i sortiranje', 1);

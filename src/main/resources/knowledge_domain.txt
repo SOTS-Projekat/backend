@@ -1,0 +1,2 @@
+INSERT INTO knowledge_domain (id, created_at, description, name, professor_id, is_real) VALUES
+(1, '2024-12-06', 'Test iz osnova programiranja', 'Osnovi programiranja', 1, false);

@@ -1,0 +1,78 @@
+-- Test
+INSERT INTO Test (id, title, professor_id, knowledge_domain_id) 
+VALUES (1, 'Osnove programiranja', 1, 1);
+
+-- Questions
+INSERT INTO Question (id, question_text, test_id, node_id) VALUES
+(1, 'Šta su promenljive u programiranju?', 1, 1), -- Promenljive i tipovi podataka
+(2, 'Šta je operator u programiranju?', 1, 2), -- Operatori i izrazi
+(3, 'Kako funkcionišu uslovne strukture?', 1, 3), -- Uslovne strukture
+(4, 'Kako se koristi for petlja?', 1, 4), -- Petlje
+(5, 'Šta su funkcije u programiranju?', 1, 5), -- Funkcije
+(6, 'Kako radimo sa nizovima?', 1, 6), -- Nizovi
+(7, 'Kako čitati podatke iz fajla?', 1, 7), -- Rad sa fajlovima
+(8, 'Šta su osnovne strukture podataka?', 1, 8), -- Osnovne strukture podataka
+(9, 'Kako funkcioniše rekurzija?', 1, 9), -- Rekurzija
+(10, 'Koji algoritmi se koriste za sortiranje?', 1, 10); -- Algoritmi i sortiranje
+
+-- Answers
+INSERT INTO Answer (id, question_id, answer_text, is_correct) VALUES
+-- Answers for Question 1
+(1, 1, 'Promenljive su skladišni prostori za podatke.', true),
+(2, 1, 'Promenljive su funkcije u programu.', false),
+(3, 1, 'Promenljive su alati za sortiranje.', false),
+(4, 1, 'Promenljive su petlje.', false),
+
+-- Answers for Question 2
+(5, 2, 'Operator je simbol za operaciju nad podacima.', true),
+(6, 2, 'Operator je varijabla.', false),
+(7, 2, 'Operator je vrsta petlje.', false),
+(8, 2, 'Operator je struktura podataka.', false),
+
+-- Answers for Question 3
+(9, 3, 'Uslovne strukture omogućavaju donošenje odluka.', true),
+(10, 3, 'Uslovne strukture iteriraju kroz nizove.', false),
+(11, 3, 'Uslovne strukture služe za sortiranje.', false),
+(12, 3, 'Uslovne strukture skladište podatke.', false),
+
+-- Answers for Question 4
+(13, 4, 'For petlja se koristi za iteraciju.', true),
+(14, 4, 'For petlja se koristi za sortiranje.', false),
+(15, 4, 'For petlja definiše funkcije.', false),
+(16, 4, 'For petlja je vrsta uslovne strukture.', false),
+
+-- Answers for Question 5
+(17, 5, 'Funkcije grupišu kod za ponovno korišćenje.', true),
+(18, 5, 'Funkcije služe za skladištenje podataka.', false),
+(19, 5, 'Funkcije su petlje.', false),
+(20, 5, 'Funkcije su nizovi.', false),
+
+-- Answers for Question 6
+(21, 6, 'Nizovi skladište kolekcije podataka.', true),
+(22, 6, 'Nizovi izvršavaju uslove.', false),
+(23, 6, 'Nizovi sortiraju podatke.', false),
+(24, 6, 'Nizovi definišu petlje.', false),
+
+-- Answers for Question 7
+(25, 7, 'Čitanje fajlova zahteva otvaranje fajla.', true),
+(26, 7, 'Čitanje fajlova radi sa petljama.', false),
+(27, 7, 'Čitanje fajlova zahteva sortiranje.', false),
+(28, 7, 'Čitanje fajlova definiše promenljive.', false),
+
+-- Answers for Question 8
+(29, 8, 'Stog i red su osnovne strukture podataka.', true),
+(30, 8, 'Strukture podataka su alati za sortiranje.', false),
+(31, 8, 'Strukture podataka su funkcije.', false),
+(32, 8, 'Strukture podataka su petlje.', false),
+
+-- Answers for Question 9
+(33, 9, 'Rekurzija je funkcija koja poziva samu sebe.', true),
+(34, 9, 'Rekurzija je petlja.', false),
+(35, 9, 'Rekurzija je algoritam za sortiranje.', false),
+(36, 9, 'Rekurzija je struktura podataka.', false),
+
+-- Answers for Question 10
+(37, 10, 'Algoritmi za sortiranje uređuju podatke.', true),
+(38, 10, 'Algoritmi sortiranja definišu petlje.', false),
+(39, 10, 'Algoritmi sortiranja su strukture podataka.', false),
+(40, 10, 'Algoritmi sortiranja su varijable.', false);

@@ -1,0 +1,258 @@
+INSERT INTO knowledge_domain (id, created_at, description, name, professor_id, is_real) VALUES
+(1, '2024-12-06', 'Test iz osnova programiranja', 'Osnovi programiranja', 1, false);
+
+
+INSERT INTO node (id, frontend_id, label, knowledge_domain_id) VALUES
+(1, '7230e047-1e08-438d-b24b-1b5eeb5b5c97', 'Promjenjive i tipovi podataka', 1),
+(2, '80d1898b-8c17-48d9-8df2-b24f1ced7f2b', 'Operatori i izrazi', 1),
+(3, 'f689e9c1-7366-4fb0-bd50-98100b6ef394', 'Uslovne strukture', 1),
+(4, '9cf3203b-c181-45ce-be84-c78478dcd387', 'Petlje', 1),
+(5, 'f3440cbc-e96f-4ae2-a1fc-17891a53a73e', 'Funkcije', 1),
+(6, '48eb335b-de1b-467e-8b7b-a3b327b1b260', 'Nizovi', 1),
+(7, '13b8d09b-2390-4486-9396-fb65720e1bb2', 'Rad sa fajlovima', 1),
+(8, '990092f6-8627-4d7f-be92-871d4576ce86', 'Osnovne strukture podataka', 1),
+(9, 'dd8cf318-83e6-4268-875c-7f2604ef36f2', 'Rekurzija', 1),
+(10, '85aca6fb-ff3e-491a-896f-0bf7bae1128f', 'Algoritmi i sortiranje', 1);
+
+
+INSERT INTO links_between_nodes (id, label, knowledge_domain_id, source_node_id, target_node_id) VALUES
+(1, '/', 1, 1, 2),
+(2, '/', 1, 2, 3),
+(3, '/', 1, 3, 4),
+(4, '/', 1, 5, 9),
+(5, '/', 1, 4, 6),
+(6, '/', 1, 6, 8),
+(7, '/', 1, 8, 10),
+(8, '/', 1, 7, 6),
+(9, '/', 1, 7, 4);
+
+
+INSERT INTO app_user (id, email, username, role, password) VALUES -- sifra
+(1, 'user1@example.com', 'user1', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'), 
+(2, 'user2@example.com', 'user2', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(3, 'user3@example.com', 'user3', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(4, 'user4@example.com', 'user4', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(5, 'user5@example.com', 'user5', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(6, 'user6@example.com', 'user6', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(7, 'user7@example.com', 'user7', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(8, 'user8@example.com', 'user8', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(9, 'user9@example.com', 'user9', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(10, 'user10@example.com', 'user10', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(11, 'user11@example.com', 'user11', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(12, 'user12@example.com', 'user12', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W');
+
+
+
+-- Test
+INSERT INTO Test (id, title, professor_id, knowledge_domain_id) 
+VALUES (1, 'Osnove programiranja', 1, 1);
+
+-- Questions
+INSERT INTO Question (id, question_text, test_id, node_id) VALUES
+(1, 'Šta su promenljive u programiranju?', 1, 1), -- Promenljive i tipovi podataka
+(2, 'Šta je operator u programiranju?', 1, 2), -- Operatori i izrazi
+(3, 'Kako funkcionišu uslovne strukture?', 1, 3), -- Uslovne strukture
+(4, 'Kako se koristi for petlja?', 1, 4), -- Petlje
+(5, 'Šta su funkcije u programiranju?', 1, 5), -- Funkcije
+(6, 'Kako radimo sa nizovima?', 1, 6), -- Nizovi
+(7, 'Kako čitati podatke iz fajla?', 1, 7), -- Rad sa fajlovima
+(8, 'Šta su osnovne strukture podataka?', 1, 8), -- Osnovne strukture podataka
+(9, 'Kako funkcioniše rekurzija?', 1, 9), -- Rekurzija
+(10, 'Koji algoritmi se koriste za sortiranje?', 1, 10); -- Algoritmi i sortiranje
+
+-- Answers
+INSERT INTO Answer (id, question_id, answer_text, is_correct) VALUES
+-- Answers for Question 1
+(1, 1, 'Promenljive su skladišni prostori za podatke.', true),
+(2, 1, 'Promenljive su funkcije u programu.', false),
+(3, 1, 'Promenljive su alati za sortiranje.', false),
+(4, 1, 'Promenljive su petlje.', false),
+
+-- Answers for Question 2
+(5, 2, 'Operator je simbol za operaciju nad podacima.', true),
+(6, 2, 'Operator je varijabla.', false),
+(7, 2, 'Operator je vrsta petlje.', false),
+(8, 2, 'Operator je struktura podataka.', false),
+
+-- Answers for Question 3
+(9, 3, 'Uslovne strukture omogućavaju donošenje odluka.', true),
+(10, 3, 'Uslovne strukture iteriraju kroz nizove.', false),
+(11, 3, 'Uslovne strukture služe za sortiranje.', false),
+(12, 3, 'Uslovne strukture skladište podatke.', false),
+
+-- Answers for Question 4
+(13, 4, 'For petlja se koristi za iteraciju.', true),
+(14, 4, 'For petlja se koristi za sortiranje.', false),
+(15, 4, 'For petlja definiše funkcije.', false),
+(16, 4, 'For petlja je vrsta uslovne strukture.', false),
+
+-- Answers for Question 5
+(17, 5, 'Funkcije grupišu kod za ponovno korišćenje.', true),
+(18, 5, 'Funkcije služe za skladištenje podataka.', false),
+(19, 5, 'Funkcije su petlje.', false),
+(20, 5, 'Funkcije su nizovi.', false),
+
+-- Answers for Question 6
+(21, 6, 'Nizovi skladište kolekcije podataka.', true),
+(22, 6, 'Nizovi izvršavaju uslove.', false),
+(23, 6, 'Nizovi sortiraju podatke.', false),
+(24, 6, 'Nizovi definišu petlje.', false),
+
+-- Answers for Question 7
+(25, 7, 'Čitanje fajlova zahteva otvaranje fajla.', true),
+(26, 7, 'Čitanje fajlova radi sa petljama.', false),
+(27, 7, 'Čitanje fajlova zahteva sortiranje.', false),
+(28, 7, 'Čitanje fajlova definiše promenljive.', false),
+
+-- Answers for Question 8
+(29, 8, 'Stog i red su osnovne strukture podataka.', true),
+(30, 8, 'Strukture podataka su alati za sortiranje.', false),
+(31, 8, 'Strukture podataka su funkcije.', false),
+(32, 8, 'Strukture podataka su petlje.', false),
+
+-- Answers for Question 9
+(33, 9, 'Rekurzija je funkcija koja poziva samu sebe.', true),
+(34, 9, 'Rekurzija je petlja.', false),
+(35, 9, 'Rekurzija je algoritam za sortiranje.', false),
+(36, 9, 'Rekurzija je struktura podataka.', false),
+
+-- Answers for Question 10
+(37, 10, 'Algoritmi za sortiranje uređuju podatke.', true),
+(38, 10, 'Algoritmi sortiranja definišu petlje.', false),
+(39, 10, 'Algoritmi sortiranja su strukture podataka.', false),
+(40, 10, 'Algoritmi sortiranja su varijable.', false);
+
+
+
+INSERT INTO Result (id, student_id, test_id, score, date_and_time) VALUES
+(1, 2, 1, 85.0, '2024-12-06 10:00:00'),
+(2, 3, 1, 90.0, '2024-12-06 10:30:00'),
+(3, 4, 1, 75.0, '2024-12-06 11:00:00'),
+(4, 5, 1, 80.0, '2024-12-06 11:30:00'),
+(5, 6, 1, 95.0, '2024-12-06 12:00:00'),
+(6, 7, 1, 70.0, '2024-12-06 12:30:00'),
+(7, 8, 1, 60.0, '2024-12-06 13:00:00'),
+(8, 9, 1, 88.0, '2024-12-06 13:30:00'),
+(9, 10, 1, 92.0, '2024-12-06 14:00:00'),
+(10, 11, 1, 78.0, '2024-12-06 14:30:00');
+
+INSERT INTO Answered_Question (id, result_id, question_id, answer_id) VALUES
+-- Student 2
+(1, 1, 1, 1), -- Tačan odgovor
+(2, 1, 2, 6), -- Pogrešan odgovor
+(3, 1, 3, 9), -- Tačan odgovor
+(4, 1, 4, 15), -- Pogrešan odgovor
+(5, 1, 5, 17), -- Tačan odgovor
+(6, 1, 6, 23), -- Pogrešan odgovor
+(7, 1, 7, 25), -- Tačan odgovor
+(8, 1, 8, 30), -- Pogrešan odgovor
+(9, 1, 9, 33), -- Tačan odgovor
+(10, 1, 10, 39), -- Pogrešan odgovor
+
+-- Student 3
+(11, 2, 1, 3), -- Pogrešan odgovor
+(12, 2, 2, 5), -- Tačan odgovor
+(13, 2, 3, 9), -- Tačan odgovor
+(14, 2, 4, 14), -- Pogrešan odgovor
+(15, 2, 5, 17), -- Tačan odgovor
+(16, 2, 6, 21), -- Tačan odgovor
+(17, 2, 7, 26), -- Pogrešan odgovor
+(18, 2, 8, 29), -- Tačan odgovor
+(19, 2, 9, 34), -- Pogrešan odgovor
+(20, 2, 10, 37), -- Tačan odgovor
+
+-- Student 4
+(21, 3, 1, 2), -- Pogrešan odgovor
+(22, 3, 2, 5), -- Tačan odgovor
+(23, 3, 3, 11), -- Pogrešan odgovor
+(24, 3, 4, 13), -- Tačan odgovor
+(25, 3, 5, 20), -- Pogrešan odgovor
+(26, 3, 6, 22), -- Pogrešan odgovor
+(27, 3, 7, 25), -- Tačan odgovor
+(28, 3, 8, 31), -- Pogrešan odgovor
+(29, 3, 9, 33), -- Tačan odgovor
+(30, 3, 10, 39), -- Pogrešan odgovor
+
+-- Student 5
+(31, 4, 1, 1), -- Tačan odgovor
+(32, 4, 2, 5), -- Tačan odgovor
+(33, 4, 3, 10), -- Pogrešan odgovor
+(34, 4, 4, 13), -- Tačan odgovor
+(35, 4, 5, 18), -- Pogrešan odgovor
+(36, 4, 6, 23), -- Pogrešan odgovor
+(37, 4, 7, 27), -- Pogrešan odgovor
+(38, 4, 8, 29), -- Tačan odgovor
+(39, 4, 9, 33), -- Tačan odgovor
+(40, 4, 10, 38), -- Pogrešan odgovor
+
+-- Student 6
+(41, 5, 1, 1), -- Tačan odgovor
+(42, 5, 2, 6), -- Pogrešan odgovor
+(43, 5, 3, 9), -- Tačan odgovor
+(44, 5, 4, 14), -- Pogrešan odgovor
+(45, 5, 5, 17), -- Tačan odgovor
+(46, 5, 6, 21), -- Tačan odgovor
+(47, 5, 7, 28), -- Pogrešan odgovor
+(48, 5, 8, 29), -- Tačan odgovor
+(49, 5, 9, 33), -- Tačan odgovor
+(50, 5, 10, 37), -- Tačan odgovor
+
+-- Student 7
+(51, 6, 1, 2), -- Pogrešan odgovor
+(52, 6, 2, 5), -- Tačan odgovor
+(53, 6, 3, 10), -- Pogrešan odgovor
+(54, 6, 4, 15), -- Pogrešan odgovor
+(55, 6, 5, 17), -- Tačan odgovor
+(56, 6, 6, 21), -- Tačan odgovor
+(57, 6, 7, 26), -- Pogrešan odgovor
+(58, 6, 8, 30), -- Pogrešan odgovor
+(59, 6, 9, 33), -- Tačan odgovor
+(60, 6, 10, 37), -- Tačan odgovor
+
+-- Student 8
+(61, 7, 1, 3), -- Pogrešan odgovor
+(62, 7, 2, 5), -- Tačan odgovor
+(63, 7, 3, 9), -- Tačan odgovor
+(64, 7, 4, 14), -- Pogrešan odgovor
+(65, 7, 5, 18), -- Pogrešan odgovor
+(66, 7, 6, 21), -- Tačan odgovor
+(67, 7, 7, 28), -- Pogrešan odgovor
+(68, 7, 8, 29), -- Tačan odgovor
+(69, 7, 9, 33), -- Tačan odgovor
+(70, 7, 10, 38), -- Pogrešan odgovor
+
+-- Student 9
+(71, 8, 1, 1), -- Tačan odgovor
+(72, 8, 2, 6), -- Pogrešan odgovor
+(73, 8, 3, 12), -- Pogrešan odgovor
+(74, 8, 4, 13), -- Tačan odgovor
+(75, 8, 5, 17), -- Tačan odgovor
+(76, 8, 6, 23), -- Pogrešan odgovor
+(77, 8, 7, 25), -- Tačan odgovor
+(78, 8, 8, 30), -- Pogrešan odgovor
+(79, 8, 9, 33), -- Tačan odgovor
+(80, 8, 10, 37), -- Tačan odgovor
+
+-- Student 10
+(81, 9, 1, 3), -- Pogrešan odgovor
+(82, 9, 2, 5), -- Tačan odgovor
+(83, 9, 3, 9), -- Tačan odgovor
+(84, 9, 4, 16), -- Pogrešan odgovor
+(85, 9, 5, 17), -- Tačan odgovor
+(86, 9, 6, 24), -- Pogrešan odgovor
+(87, 9, 7, 27), -- Pogrešan odgovor
+(88, 9, 8, 29), -- Tačan odgovor
+(89, 9, 9, 35), -- Pogrešan odgovor
+(90, 9, 10, 37), -- Tačan odgovor
+
+-- Student 11
+(91, 10, 1, 2), -- Pogrešan odgovor
+(92, 10, 2, 5), -- Tačan odgovor
+(93, 10, 3, 9), -- Tačan odgovor
+(94, 10, 4, 14), -- Pogrešan odgovor
+(95, 10, 5, 18), -- Pogrešan odgovor
+(96, 10, 6, 21), -- Tačan odgovor
+(97, 10, 7, 28), -- Pogrešan odgovor
+(98, 10, 8, 29), -- Tačan odgovor
+(99, 10, 9, 34), -- Pogrešan odgovor
+(100, 10, 10, 37); -- Tačan odgovor

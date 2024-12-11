@@ -1,0 +1,13 @@
+INSERT INTO app_user (id, email, username, role, password) VALUES -- sifra
+(1, 'user1@example.com', 'user1', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'), 
+(2, 'user2@example.com', 'user2', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(3, 'user3@example.com', 'user3', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(4, 'user4@example.com', 'user4', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(5, 'user5@example.com', 'user5', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(6, 'user6@example.com', 'user6', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(7, 'user7@example.com', 'user7', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(8, 'user8@example.com', 'user8', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(9, 'user9@example.com', 'user9', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(10, 'user10@example.com', 'user10', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(11, 'user11@example.com', 'user11', 'STUDENT', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W'),
+(12, 'user12@example.com', 'user12', 'PROFESSOR', '$2a$10$LtdPqNhC69dcJZVu60VKfeXvoPceh3blRhJdzi15LRPzkFJCaLt9W');

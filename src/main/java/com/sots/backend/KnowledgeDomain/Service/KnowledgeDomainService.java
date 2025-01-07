@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KnowledgeDomainService {
@@ -173,97 +174,120 @@ public class KnowledgeDomainService {
         return knowledgeDomainResponses;
     }
 
-    public KnowledgeDomainResponse save(KnowledgeDomainRequest request){
+    public KnowledgeDomainResponse save(KnowledgeDomainRequest request) {
         User professor = userRepository.findById(Long.parseLong(request.getProfessorId()))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        KnowledgeDomain knowledgeDomain = KnowledgeDomain.builder()
+        KnowledgeDomain knowledgeDomain = buildKnowledgeDomain(request, professor);
+
+        KnowledgeDomain savedKnowledgeDomain = knowledgeDomainRepository.save(knowledgeDomain);
+
+        List<Node> nodes = mapNodeRequestsToEntities(request.getNodes(), savedKnowledgeDomain);
+        List<Node> savedNodes = nodeRepository.saveAll(nodes);
+
+        List<Link> links = mapLinkRequestsToEntities(request.getLinks(), nodeRepository, savedKnowledgeDomain);
+        List<Link> savedLinks = linkRepository.saveAll(links);
+
+        savedKnowledgeDomain.setNodesInDomain(savedNodes);
+        savedKnowledgeDomain.setLinksInDomain(savedLinks);
+
+        return mapKnowledgeDomainToDTO(savedKnowledgeDomain);
+    }
+
+    @Transactional
+    public KnowledgeDomainResponse update(Long id, KnowledgeDomainRequest request) {
+        KnowledgeDomain knowledgeDomain = knowledgeDomainRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("KnowledgeDomain not found with id: " + id));
+
+        knowledgeDomain.setName(request.getName());
+        knowledgeDomain.setDescription(request.getDescription());
+
+        KnowledgeDomain updatedKnowledgeDomain = knowledgeDomainRepository.save(knowledgeDomain);
+        return mapKnowledgeDomainToDTO(updatedKnowledgeDomain);
+    }
+
+    private KnowledgeDomain buildKnowledgeDomain(KnowledgeDomainRequest request, User professor) {
+        return KnowledgeDomain.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .professor(professor)
                 .createdAt(LocalDate.now())
                 .build();
-
-        KnowledgeDomain savedKnowledgeDomain = knowledgeDomainRepository.save(knowledgeDomain);
-
-        List<Node> nodes = new ArrayList<>();
-        for(NodeRequest nr : request.getNodes()){
-            Node node = Node.builder()
-                    .label(nr.getName())
-                    .frontendId(nr.getId())
-                    .knowledgeDomain(savedKnowledgeDomain)
-                    .build();
-            nodes.add(node);
-        }
-        List<Node> savedNodes = nodeRepository.saveAll(nodes);
-
-        List<Link> links = new ArrayList<>();
-        for(LinkRequest l : request.getLinks()){
-            Node targetNode = nodeRepository.findByFrontendId(l.getTarget().getId());
-            Node sourceNode = nodeRepository.findByFrontendId(l.getSource().getId());
-            links.add(Link.builder()
-                    .label(l.getName())
-                    .targetNode(targetNode)
-                    .sourceNode(sourceNode)
-                    .knowledgeDomain(savedKnowledgeDomain)
-                    .build());
-        }
-        List<Link> savedLinks = linkRepository.saveAll(links);
-        savedKnowledgeDomain.setNodesInDomain(nodes);
-        savedKnowledgeDomain.setLinksInDomain(links);
-
-        KnowledgeDomainResponse knowledgeDomainResponse = mapKnowledgeDomainToDTO(savedKnowledgeDomain);
-        return knowledgeDomainResponse;
     }
 
-    private KnowledgeDomainResponse mapKnowledgeDomainToDTO(KnowledgeDomain knowledgeDomain){
-        UserResponse userResponse = UserResponse.builder()
-                .email(knowledgeDomain.getProfessor().getEmail())
-                .username(knowledgeDomain.getProfessor().getUsername())
-                .role(knowledgeDomain.getProfessor().getRole())
-                .id(knowledgeDomain.getProfessor().getId())
-                .build();
-        KnowledgeDomainResponse returnKnowledgeDomain = KnowledgeDomainResponse.builder()
+    private List<Node> mapNodeRequestsToEntities(List<NodeRequest> nodeRequests, KnowledgeDomain domain) {
+        return nodeRequests.stream()
+                .map(nr -> Node.builder()
+                        .label(nr.getName())
+                        .frontendId(nr.getId())
+                        .knowledgeDomain(domain)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private List<Link> mapLinkRequestsToEntities(List<LinkRequest> linkRequests, NodeRepository nodeRepository, KnowledgeDomain domain) {
+        return linkRequests.stream()
+                .map(l -> {
+                    Node sourceNode = nodeRepository.findByFrontendId(l.getSource().getId());
+                    Node targetNode = nodeRepository.findByFrontendId(l.getTarget().getId());
+                    return Link.builder()
+                            .label(l.getName())
+                            .sourceNode(sourceNode)
+                            .targetNode(targetNode)
+                            .knowledgeDomain(domain)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    private KnowledgeDomainResponse mapKnowledgeDomainToDTO(KnowledgeDomain knowledgeDomain) {
+        return KnowledgeDomainResponse.builder()
                 .id(knowledgeDomain.getId())
-                .professor(userResponse)
+                .professor(mapUserToResponse(knowledgeDomain.getProfessor()))
                 .name(knowledgeDomain.getName())
                 .description(knowledgeDomain.getDescription())
                 .date(knowledgeDomain.getCreatedAt())
+                .nodes(mapNodesToResponses(knowledgeDomain.getNodesInDomain()))
+                .links(mapLinksToResponses(knowledgeDomain.getLinksInDomain()))
                 .build();
+    }
 
-        List<NodeResponse> nodeResponses = new ArrayList<>();
-        for(Node n : knowledgeDomain.getNodesInDomain()){
-            NodeResponse nodeResponse = NodeResponse.builder()
-                    .id(n.getId())
-                    .frontendId(n.getFrontendId())
-                    .label(n.getLabel())
-                    .build();
-            nodeResponses.add(nodeResponse);
-        }
+    private UserResponse mapUserToResponse(User user) {
+        return UserResponse.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .id(user.getId())
+                .build();
+    }
 
-        List<LinkResponse> linkResponses = new ArrayList<>();
-        for(Link l : knowledgeDomain.getLinksInDomain()){
-            LinkResponse linkResponse = LinkResponse.builder()
-                    .id(l.getId())
-                    .label(l.getLabel())
-                    .sourceNode(NodeResponse.builder()
-                            .id(l.getSourceNode().getId())
-                            .frontendId(l.getSourceNode().getFrontendId())
-                            .label(l.getSourceNode().getLabel())
-                            .build())
-                    .targetNode(NodeResponse.builder()
-                            .id(l.getTargetNode().getId())
-                            .frontendId(l.getTargetNode().getFrontendId())
-                            .label(l.getTargetNode().getLabel())
-                            .build())
-                    .build();
-            linkResponses.add(linkResponse);
-        }
+    private List<NodeResponse> mapNodesToResponses(List<Node> nodes) {
+        return nodes.stream()
+                .map(n -> NodeResponse.builder()
+                        .id(n.getId())
+                        .frontendId(n.getFrontendId())
+                        .label(n.getLabel())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
-        returnKnowledgeDomain.setNodes(nodeResponses);
-        returnKnowledgeDomain.setLinks(linkResponses);
+    private List<LinkResponse> mapLinksToResponses(List<Link> links) {
+        return links.stream()
+                .map(l -> LinkResponse.builder()
+                        .id(l.getId())
+                        .label(l.getLabel())
+                        .sourceNode(mapNodeToResponse(l.getSourceNode()))
+                        .targetNode(mapNodeToResponse(l.getTargetNode()))
+                        .build())
+                .collect(Collectors.toList());
+    }
 
-        return returnKnowledgeDomain;
+    private NodeResponse mapNodeToResponse(Node node) {
+        return NodeResponse.builder()
+                .id(node.getId())
+                .frontendId(node.getFrontendId())
+                .label(node.getLabel())
+                .build();
     }
 
     public void deleteKnowledgeDomain(Long id) {

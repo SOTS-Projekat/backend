@@ -28,6 +28,12 @@ public class KnowledgeDomainController {
         return ResponseEntity.ok(knowledgeDomainResponse);
     }
 
+    @PutMapping("update/{id}")
+    public ResponseEntity<KnowledgeDomainResponse> updateDomain(@PathVariable Long id, @RequestBody KnowledgeDomainRequest request) {
+        KnowledgeDomainResponse knowledgeDomainResponse = knowledgeDomainService.update(id, request);
+        return ResponseEntity.ok(knowledgeDomainResponse);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<List<KnowledgeDomainResponse>> getAllKnowledgeDomains(@PathVariable Long id){
         List<KnowledgeDomainResponse> knowledgeDomainResponses = knowledgeDomainService.getAll(id);
@@ -56,6 +62,5 @@ public class KnowledgeDomainController {
         KnowledgeDomainResponse domain = knowledgeDomainService.getRealKnowledgeDomain(id);
         return ResponseEntity.ok(domain);
     }
-
 
 }

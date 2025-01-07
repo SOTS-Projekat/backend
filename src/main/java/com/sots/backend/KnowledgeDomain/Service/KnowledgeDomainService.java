@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KnowledgeDomainService {
@@ -186,34 +187,46 @@ public class KnowledgeDomainService {
 
         KnowledgeDomain savedKnowledgeDomain = knowledgeDomainRepository.save(knowledgeDomain);
 
-        List<Node> nodes = new ArrayList<>();
-        for(NodeRequest nr : request.getNodes()){
-            Node node = Node.builder()
-                    .label(nr.getName())
-                    .frontendId(nr.getId())
-                    .knowledgeDomain(savedKnowledgeDomain)
-                    .build();
-            nodes.add(node);
-        }
-        List<Node> savedNodes = nodeRepository.saveAll(nodes);
+        List<Node> nodes = mapNodes(knowledgeDomain, request.getNodes());
+        List<Link> links = mapLinks(knowledgeDomain, request.getLinks());
 
-        List<Link> links = new ArrayList<>();
-        for(LinkRequest l : request.getLinks()){
-            Node targetNode = nodeRepository.findByFrontendId(l.getTarget().getId());
-            Node sourceNode = nodeRepository.findByFrontendId(l.getSource().getId());
-            links.add(Link.builder()
-                    .label(l.getName())
-                    .targetNode(targetNode)
-                    .sourceNode(sourceNode)
-                    .knowledgeDomain(savedKnowledgeDomain)
-                    .build());
-        }
+        List<Node> savedNodes = nodeRepository.saveAll(nodes);
         List<Link> savedLinks = linkRepository.saveAll(links);
+
         savedKnowledgeDomain.setNodesInDomain(nodes);
         savedKnowledgeDomain.setLinksInDomain(links);
 
         KnowledgeDomainResponse knowledgeDomainResponse = mapKnowledgeDomainToDTO(savedKnowledgeDomain);
         return knowledgeDomainResponse;
+    }
+
+    @Transactional
+    public KnowledgeDomainResponse update(Long id, KnowledgeDomainRequest request) {
+        KnowledgeDomain knowledgeDomain = knowledgeDomainRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("KnowledgeDomain not found with id: " + id));
+
+        knowledgeDomain.setName(request.getName());
+        knowledgeDomain.setDescription(request.getDescription());
+
+        if (request.getProfessorId() != null) {
+            User professor = userRepository.findById(Long.parseLong(request.getProfessorId()))
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            knowledgeDomain.setProfessor(professor);
+        }
+
+        List<Node> updatedNodes = mapNodes(knowledgeDomain, request.getNodes());
+        List<Link> updatedLinks = mapLinks(knowledgeDomain, request.getLinks());
+
+        nodeRepository.deleteAll(knowledgeDomain.getNodesInDomain());
+        linkRepository.deleteAll(knowledgeDomain.getLinksInDomain());
+
+        nodeRepository.saveAll(updatedNodes);
+        linkRepository.saveAll(updatedLinks);
+
+        knowledgeDomain.setNodesInDomain(updatedNodes);
+        knowledgeDomain.setLinksInDomain(updatedLinks);
+
+        return mapKnowledgeDomainToDTO(knowledgeDomain);
     }
 
     private KnowledgeDomainResponse mapKnowledgeDomainToDTO(KnowledgeDomain knowledgeDomain){
@@ -283,6 +296,34 @@ public class KnowledgeDomainService {
 
         return knowledgeDomain;
     }
+
+    //mapiranje cvorova i veza
+    private List<Node> mapNodes(KnowledgeDomain domain, List<NodeRequest> nodeRequests) {
+        return nodeRequests.stream()
+                .map(nr -> Node.builder()
+                        .label(nr.getName())
+                        .frontendId(nr.getId())
+                        .knowledgeDomain(domain)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private List<Link> mapLinks(KnowledgeDomain domain, List<LinkRequest> linkRequests) {
+        return linkRequests.stream()
+                .map(l -> {
+                    Node sourceNode = nodeRepository.findByFrontendId(l.getSource().getId());
+                    Node targetNode = nodeRepository.findByFrontendId(l.getTarget().getId());
+                    return Link.builder()
+                            .label(l.getName())
+                            .sourceNode(sourceNode)
+                            .targetNode(targetNode)
+                            .knowledgeDomain(domain)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
 
     //  Metoda za vezivanje pitanja za cvor

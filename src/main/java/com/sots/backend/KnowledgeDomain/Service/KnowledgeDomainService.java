@@ -30,10 +30,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -149,6 +146,7 @@ public class KnowledgeDomainService {
             }
         }
 
+        System.out.println(Arrays.deepToString(matrix));
         return matrix;
     }
 
@@ -309,5 +307,5 @@ public class KnowledgeDomainService {
     }
 
 
-    //  Metoda za vezivanje pitanja za cvor
+
 }

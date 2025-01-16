@@ -34,4 +34,8 @@ public class Test {
     @JoinColumn(name = "knowledge_domain_id")
     @JsonIgnore
     private KnowledgeDomain knowledgeDomain;
+
+    //dodano
+    @OneToMany(mappedBy = "test", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Result> results;
 }

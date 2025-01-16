@@ -10,9 +10,14 @@ import com.sots.backend.Test.Model.Question;
 import com.sots.backend.Test.Model.Test;
 import com.sots.backend.Test.Service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +60,36 @@ public class TestController {
                 .toList();
 
         return ResponseEntity.ok(testResponses);
+    }
+
+    @GetMapping("/export/{id}")
+    public ResponseEntity<Resource> exportTestToQTI(@PathVariable Long id) {
+        Optional<Test> optionalTest = testService.getById(id);
+
+        if (optionalTest.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Test test = optionalTest.get();
+
+        String qtiXml = testService.generateQTIXml(test);
+
+        ByteArrayResource resource = new ByteArrayResource(qtiXml.getBytes(StandardCharsets.UTF_8));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=test_" + id + ".xml")
+                .contentType(MediaType.APPLICATION_XML)
+                .body(resource);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
+        boolean isDeleted = testService.deleteTestById(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build(); // Uspešno obrisano
+        } else {
+            return ResponseEntity.notFound().build(); // Test nije pronađen
+        }
     }
 
 }

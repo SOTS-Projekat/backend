@@ -60,4 +60,53 @@ public class TestService {
     public List<Test> getAll() {
         return testRepository.findAll();
     }
+
+    public String generateQTIXml(Test test) {
+        StringBuilder xmlBuilder = new StringBuilder();
+
+        // Početak XML fajla
+        xmlBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        xmlBuilder.append("<assessmentTest xmlns=\"http://www.imsglobal.org/xsd/imsqti_v2p1\" identifier=\"test_" + test.getId() + "\" title=\"" + test.getTitle() + "\">\n");
+
+        for (Question question : test.getQuestions()) {
+            xmlBuilder.append("  <assessmentItem identifier=\"q_" + question.getId() + "\" title=\"" + question.getQuestionText() + "\" adaptive=\"false\" timeDependent=\"false\">\n");
+            xmlBuilder.append("    <itemBody>\n");
+            xmlBuilder.append("      <choiceInteraction responseIdentifier=\"RESPONSE_" + question.getId() + "\" shuffle=\"true\" maxChoices=\"1\">\n");
+            xmlBuilder.append("        <prompt>" + question.getQuestionText() + "</prompt>\n");
+
+            for (Answer answer : question.getOfferedAnswers()) {
+                xmlBuilder.append("        <simpleChoice identifier=\"a_" + answer.getId() + "\">" + answer.getAnswerText() + "</simpleChoice>\n");
+            }
+
+            xmlBuilder.append("      </choiceInteraction>\n");
+            xmlBuilder.append("    </itemBody>\n");
+            xmlBuilder.append("    <responseDeclaration identifier=\"RESPONSE_" + question.getId() + "\" cardinality=\"single\" baseType=\"identifier\">\n");
+            xmlBuilder.append("      <correctResponse>\n");
+
+            for (Answer answer : question.getOfferedAnswers()) {
+                if (answer.isCorrect()) {
+                    xmlBuilder.append("        <value>a_" + answer.getId() + "</value>\n");
+                }
+            }
+
+            xmlBuilder.append("      </correctResponse>\n");
+            xmlBuilder.append("    </responseDeclaration>\n");
+            xmlBuilder.append("  </assessmentItem>\n");
+        }
+
+        // Kraj XML fajla
+        xmlBuilder.append("</assessmentTest>\n");
+
+        return xmlBuilder.toString();
+    }
+
+    public boolean deleteTestById(Long id) {
+        if (testRepository.existsById(id)) {
+            testRepository.deleteById(id); // Brisanje testa iz baze
+            return true;
+        } else {
+            return false; // Test sa datim ID-jem ne postoji
+        }
+    }
+
 }

@@ -325,7 +325,7 @@ public class KnowledgeDomainService {
                     .id(node.getId())
                     .frontendId(node.getFrontendId())
                     .label(node.getLabel())
-                    .correct(isCorrect) //  Mozda ovde samo staviti true, kako bi izbacio tacne cvorove (one koji su za bojenje)
+                    .correct(isCorrect) //  Mozda ovde samo staviti true, kako bi izbacio tacne cvorove (samo one koji su za bojenje)
                     .build());
         }
 

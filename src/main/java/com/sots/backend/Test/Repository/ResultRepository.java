@@ -21,4 +21,6 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
 
     @Query("SELECT r FROM Result r WHERE r.test.id = :testId")
     List<Result> findAllByTestId(Long testId);
+
+    Optional<Result> findByTestIdAndStudentId(Long testId, Long studentId); //Mozda moze ovde i list
 }

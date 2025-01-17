@@ -28,6 +28,5 @@ public class AnsweredQuestion {
     @JoinColumn(name = "answer_id")
     private Answer selectedAnswer;
 
-
 }
 

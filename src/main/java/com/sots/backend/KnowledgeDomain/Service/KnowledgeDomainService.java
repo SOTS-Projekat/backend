@@ -23,6 +23,7 @@ import com.sots.backend.User.Model.User;
 import com.sots.backend.User.Repository.UserRepository;
 import com.sots.backend.User.Service.UserService;
 import jakarta.transaction.Transactional;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class KnowledgeDomainService {
         List<Result> resultList = resultRepository.findAllByTestId(id);
         int[][] matrix = generateMatrix(resultList);
 
-        int[][] result = ksFlaskService.getIITAImplications(matrix).block();
+        int[][] result = ksFlaskService.getIITAImplications(matrix).block();    //odavde se dobijaju realne implikacije, na osnovu kojih znamo kako su cvorovi zapravo povezani (kako zapravo treba da se uci)
 
         if (result == null) {
             throw new RuntimeException("IITA call failed!");
@@ -146,7 +147,7 @@ public class KnowledgeDomainService {
             }
         }
 
-        System.out.println(Arrays.deepToString(matrix));
+        //System.out.println(Arrays.deepToString(matrix));
         return matrix;
     }
 
@@ -305,6 +306,34 @@ public class KnowledgeDomainService {
 
         return knowledgeDomain;
     }
+
+    public List<NodeResponse> getCorrectStudentAnswers(long testId, long studentId) {
+        Result result = resultRepository.findByTestIdAndStudentId(testId, studentId)
+                .orElseThrow(() -> new RuntimeException("Result not found with testId: " + testId + " and studentId: " + studentId));
+
+        List<AnsweredQuestion> answeredQuestionList = result.getAnsweredQuestions();
+        answeredQuestionList.sort(Comparator.comparing(AnsweredQuestion::getId));
+
+        List<NodeResponse> nodeDTOList = new ArrayList<>();
+
+        for (AnsweredQuestion ansQ : answeredQuestionList) {
+            Node node = ansQ.getQuestion().getNode();
+
+            boolean isCorrect = ansQ.getSelectedAnswer() != null && ansQ.getSelectedAnswer().isCorrect();
+
+            nodeDTOList.add(NodeResponse.builder()
+                    .id(node.getId())
+                    .frontendId(node.getFrontendId())
+                    .label(node.getLabel())
+                    .correct(isCorrect) //  Mozda ovde samo staviti true, kako bi izbacio tacne cvorove (one koji su za bojenje)
+                    .build());
+        }
+
+        return nodeDTOList;
+    }
+
+
+
 
 
 

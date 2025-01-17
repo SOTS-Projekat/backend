@@ -13,4 +13,5 @@ public class NodeResponse {
     private Long id;
     private String label;
     private String frontendId;
+    private boolean correct;
 }

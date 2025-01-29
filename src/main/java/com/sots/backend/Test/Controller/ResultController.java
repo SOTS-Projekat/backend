@@ -5,16 +5,14 @@ import com.sots.backend.Test.DTO.Request.ResultRequest;
 import com.sots.backend.Test.DTO.Response.ResultTestResponse;
 import com.sots.backend.Test.DTO.Response.TestResponse;
 import com.sots.backend.Test.Mapper.TestMapper;
-import com.sots.backend.Test.Model.Answer;
-import com.sots.backend.Test.Model.Question;
-import com.sots.backend.Test.Model.Result;
-import com.sots.backend.Test.Model.Test;
+import com.sots.backend.Test.Model.*;
 import com.sots.backend.Test.Service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,4 +31,16 @@ public class ResultController {
         ResultTestResponse resultTestResponse = resultService.getResultTestResponse(id);
         return ResponseEntity.ok(resultTestResponse);
     }
+
+//    @GetMapping("/answered-questions/{id}")
+//    public ResponseEntity<List<AnsweredQuestion>> getAllAnsweredQuestionsByResult(@PathVariable Long id) {
+//        List<AnsweredQuestion> answeredQuestions = resultService.getAllAnsweredQuestionsByResult(id);
+//        return ResponseEntity.ok(answeredQuestions);
+//    }
+
+//    @GetMapping("/answered-questions-details/{resultId}")
+//    public ResponseEntity<List<Map<String, Object>>> getAnsweredQuestionsDetails(@PathVariable Long resultId) {
+//        List<Map<String, Object>> details = resultService.getAnsweredQuestionsDetails(resultId);
+//        return ResponseEntity.ok(details);
+//    }
 }

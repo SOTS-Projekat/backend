@@ -2,7 +2,9 @@ package com.sots.backend.KnowledgeDomain.Controller;
 
 import com.sots.backend.KnowledgeDomain.DTO.Request.KnowledgeDomainRequest;
 import com.sots.backend.KnowledgeDomain.DTO.Response.KnowledgeDomainResponse;
+import com.sots.backend.KnowledgeDomain.DTO.Response.NodeResponse;
 import com.sots.backend.KnowledgeDomain.Model.KnowledgeDomain;
+import com.sots.backend.KnowledgeDomain.Model.Node;
 import com.sots.backend.KnowledgeDomain.Service.KnowledgeDomainService;
 import com.sots.backend.Test.DTO.Response.TestResponse;
 import com.sots.backend.Test.Mapper.TestMapper;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -62,5 +65,12 @@ public class KnowledgeDomainController {
         KnowledgeDomainResponse domain = knowledgeDomainService.getRealKnowledgeDomain(id);
         return ResponseEntity.ok(domain);
     }
+
+    @GetMapping("/correct-answers")
+    public ResponseEntity<List<NodeResponse>> getCorrectStudentAnswers(@RequestParam Long testId, @RequestParam Long studentId) {
+        List<NodeResponse> studentAnsweredNodes = knowledgeDomainService.getCorrectStudentAnswers(testId, studentId);
+        return ResponseEntity.ok(studentAnsweredNodes);
+    }
+
 
 }

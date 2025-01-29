@@ -36,5 +36,7 @@ public class Result {
     private List<AnsweredQuestion> answeredQuestions;
 
     private LocalDateTime dateAndTime;
+
+
 }
 

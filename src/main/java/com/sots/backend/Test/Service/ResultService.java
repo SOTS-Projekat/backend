@@ -5,9 +5,7 @@ import com.sots.backend.Test.DTO.Request.ResultRequest;
 import com.sots.backend.Test.DTO.Response.ResultTestResponse;
 import com.sots.backend.Test.Mapper.TestMapper;
 import com.sots.backend.Test.Model.*;
-import com.sots.backend.Test.Repository.AnsweredQuestionRepository;
-import com.sots.backend.Test.Repository.ResultRepository;
-import com.sots.backend.Test.Repository.TestRepository;
+import com.sots.backend.Test.Repository.*;
 import com.sots.backend.User.Model.User;
 import com.sots.backend.User.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,12 @@ public class ResultService {
     private AnsweredQuestionRepository answeredQuestionRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
     @Autowired
     private TestRepository testRepository;
     @Autowired
@@ -63,7 +67,7 @@ public class ResultService {
         return testMapper.toResultTestResponse(returnResult.getTest(), answeredQuestionList);
     }
 
-    private List<AnsweredQuestion> mapAnsweredQuestions(List<AnsweredQuestionRequest> answeredQuestionRequests, Result result){
+    /*private List<AnsweredQuestion> mapAnsweredQuestions(List<AnsweredQuestionRequest> answeredQuestionRequests, Result result){
         List<AnsweredQuestion> retList = new ArrayList<>();
         for(AnsweredQuestionRequest a : answeredQuestionRequests){
             if(a.getAnswerId() != null){
@@ -82,6 +86,28 @@ public class ResultService {
 
         }
         return retList;
+    }*/
+
+    private List<AnsweredQuestion> mapAnsweredQuestions(List<AnsweredQuestionRequest> answeredQuestionRequests, Result result) {
+        List<AnsweredQuestion> retList = new ArrayList<>();
+        for (AnsweredQuestionRequest request : answeredQuestionRequests) {
+            Question question = questionRepository.findById(request.getQuestionId())
+                    .orElseThrow(() -> new RuntimeException("Question not found with ID: " + request.getQuestionId()));
+
+            Answer answer = null;
+            if (request.getAnswerId() != null) {
+                answer = answerRepository.findById(request.getAnswerId())
+                        .orElseThrow(() -> new RuntimeException("Answer not found with ID: " + request.getAnswerId()));
+            }
+
+            retList.add(AnsweredQuestion.builder()
+                    .result(result)
+                    .question(question)
+                    .selectedAnswer(answer)
+                    .build());
+        }
+        return retList;
     }
+
 
 }

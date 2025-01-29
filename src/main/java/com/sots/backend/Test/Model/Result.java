@@ -32,7 +32,7 @@ public class Result {
 
     private double score;
 
-    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnsweredQuestion> answeredQuestions;
 
     private LocalDateTime dateAndTime;

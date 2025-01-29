@@ -20,7 +20,6 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "question_id")
-    //@JsonIgnoreProperties({"questionText", "test"})
     private Question question;
 
     private String answerText;

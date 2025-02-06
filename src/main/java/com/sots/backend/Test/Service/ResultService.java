@@ -60,8 +60,8 @@ public class ResultService {
 
     }
 
-    public ResultTestResponse getResultTestResponse(Long id){
-        Result returnResult = resultRepository.findByIdWithDetails(id).get();
+    public ResultTestResponse getResultTestResponse(Long studentId, Long testId){
+        Result returnResult = resultRepository.findByStudentIdAndTestIdWithDetails(studentId, testId).get();
         List<AnsweredQuestion> answeredQuestionList = answeredQuestionRepository.findByResultId(returnResult.getId());
         return testMapper.toResultTestResponse(returnResult.getTest(), answeredQuestionList);
     }
@@ -106,6 +106,10 @@ public class ResultService {
                     .build());
         }
         return retList;
+    }
+
+    public List<Result> getAllResultsByStudent(Long studentId){
+        return resultRepository.findByStudentId(studentId);
     }
 
 

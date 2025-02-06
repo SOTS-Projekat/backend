@@ -14,4 +14,5 @@ public class TestResponse {
     private Long id;
     private String title;
     private List<QuestionResponse> questions;
+    private boolean solved;
 }

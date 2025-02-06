@@ -26,9 +26,9 @@ public class ResultController {
         return ResponseEntity.ok(resultService.save(resultRequest));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResultTestResponse> getById(@PathVariable Long id) {
-        ResultTestResponse resultTestResponse = resultService.getResultTestResponse(id);
+    @GetMapping("/{studentId}/{testId}")
+    public ResponseEntity<ResultTestResponse> getById(@PathVariable Long studentId, @PathVariable Long testId) {
+        ResultTestResponse resultTestResponse = resultService.getResultTestResponse(studentId, testId);
         return ResponseEntity.ok(resultTestResponse);
     }
 

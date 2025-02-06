@@ -7,7 +7,9 @@ import com.sots.backend.Test.Mapper.QuestionMapper;
 import com.sots.backend.Test.Mapper.TestMapper;
 import com.sots.backend.Test.Model.Answer;
 import com.sots.backend.Test.Model.Question;
+import com.sots.backend.Test.Model.Result;
 import com.sots.backend.Test.Model.Test;
+import com.sots.backend.Test.Service.ResultService;
 import com.sots.backend.Test.Service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -26,6 +28,8 @@ import java.util.Optional;
 public class TestController {
     @Autowired
     private TestService testService;
+    @Autowired
+    private ResultService resultService;
     @Autowired
     private TestMapper testMapper;
     @Autowired
@@ -58,6 +62,26 @@ public class TestController {
         List<TestResponse> testResponses = tests.stream()
                 .map(TestMapper::toTestResponse)
                 .toList();
+
+        return ResponseEntity.ok(testResponses);
+    }
+
+    @GetMapping("/all-for-student/{studentId}")
+    public ResponseEntity<List<TestResponse>> getAllForStudent(@PathVariable Long studentId) {
+        List<Test> tests = testService.getAll();
+        List<TestResponse> testResponses = tests.stream()
+                .map(TestMapper::toTestResponse)
+                .toList();
+
+        List<Result> studentResults = resultService.getAllResultsByStudent(studentId);
+
+        for(Result sr : studentResults){
+            for(TestResponse ts : testResponses){
+                if(sr.getTest().getId() == ts.getId()){
+                    ts.setSolved(true);
+                }
+            }
+        }
 
         return ResponseEntity.ok(testResponses);
     }

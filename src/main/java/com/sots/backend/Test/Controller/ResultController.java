@@ -32,15 +32,5 @@ public class ResultController {
         return ResponseEntity.ok(resultTestResponse);
     }
 
-//    @GetMapping("/answered-questions/{id}")
-//    public ResponseEntity<List<AnsweredQuestion>> getAllAnsweredQuestionsByResult(@PathVariable Long id) {
-//        List<AnsweredQuestion> answeredQuestions = resultService.getAllAnsweredQuestionsByResult(id);
-//        return ResponseEntity.ok(answeredQuestions);
-//    }
 
-//    @GetMapping("/answered-questions-details/{resultId}")
-//    public ResponseEntity<List<Map<String, Object>>> getAnsweredQuestionsDetails(@PathVariable Long resultId) {
-//        List<Map<String, Object>> details = resultService.getAnsweredQuestionsDetails(resultId);
-//        return ResponseEntity.ok(details);
-//    }
 }

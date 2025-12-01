@@ -44,6 +44,7 @@ public class TestController {
         List<Answer> answers = answerMapper.answerDtoToList(test.getQuestions());
         return ResponseEntity.ok(testService.createTest(t, questions, answers));
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<TestResponse> getById(@PathVariable Long id) {
         Optional<Test> test = testService.getById(id);

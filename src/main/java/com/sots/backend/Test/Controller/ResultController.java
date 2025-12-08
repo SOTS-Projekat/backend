@@ -3,6 +3,7 @@ package com.sots.backend.Test.Controller;
 import com.sots.backend.Test.DTO.Request.CreateTestRequest;
 import com.sots.backend.Test.DTO.Request.ResultRequest;
 import com.sots.backend.Test.DTO.Response.ResultTestResponse;
+import com.sots.backend.Test.DTO.Response.StudentResultTestResponse;
 import com.sots.backend.Test.DTO.Response.TestResponse;
 import com.sots.backend.Test.Mapper.TestMapper;
 import com.sots.backend.Test.Model.*;
@@ -30,6 +31,11 @@ public class ResultController {
     public ResponseEntity<ResultTestResponse> getById(@PathVariable Long studentId, @PathVariable Long testId) {
         ResultTestResponse resultTestResponse = resultService.getResultTestResponse(studentId, testId);
         return ResponseEntity.ok(resultTestResponse);
+    }
+
+    @GetMapping("/{testId}/results")
+    public ResponseEntity<List<Result>> getByTestId(@PathVariable Long testId) {
+        return ResponseEntity.ok(resultService.getResultsByTestId(testId));
     }
 
 

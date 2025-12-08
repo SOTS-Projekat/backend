@@ -34,4 +34,6 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
     Optional<Result> findByTestIdAndStudentId(Long testId, Long studentId); //Mozda moze ovde i list
 
     List<Result> findByStudentId(Long studentId);
+
+
 }

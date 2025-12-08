@@ -3,6 +3,7 @@ package com.sots.backend.Test.Service;
 import com.sots.backend.Test.DTO.Request.AnsweredQuestionRequest;
 import com.sots.backend.Test.DTO.Request.ResultRequest;
 import com.sots.backend.Test.DTO.Response.ResultTestResponse;
+import com.sots.backend.Test.DTO.Response.StudentResultTestResponse;
 import com.sots.backend.Test.Mapper.TestMapper;
 import com.sots.backend.Test.Model.*;
 import com.sots.backend.Test.Repository.*;
@@ -11,9 +12,11 @@ import com.sots.backend.User.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ResultService {
@@ -60,32 +63,13 @@ public class ResultService {
 
     }
 
+    //  Uzmemo listu iz repo i mapiramo na response
     public ResultTestResponse getResultTestResponse(Long studentId, Long testId){
         Result returnResult = resultRepository.findByStudentIdAndTestIdWithDetails(studentId, testId).get();
         List<AnsweredQuestion> answeredQuestionList = answeredQuestionRepository.findByResultId(returnResult.getId());
         return testMapper.toResultTestResponse(returnResult.getTest(), answeredQuestionList);
     }
 
-    /*private List<AnsweredQuestion> mapAnsweredQuestions(List<AnsweredQuestionRequest> answeredQuestionRequests, Result result){
-        List<AnsweredQuestion> retList = new ArrayList<>();
-        for(AnsweredQuestionRequest a : answeredQuestionRequests){
-            if(a.getAnswerId() != null){
-                retList.add(AnsweredQuestion.builder()
-                        .question(Question.builder().id(a.getQuestionId()).build())
-                        .result(result)
-                        .selectedAnswer(Answer.builder().id(a.getAnswerId()).build())
-                        .build());
-            }else{
-                retList.add(AnsweredQuestion.builder()
-                        .question(Question.builder().id(a.getQuestionId()).build())
-                        .result(result)
-                        .selectedAnswer(null)
-                        .build());
-            }
-
-        }
-        return retList;
-    }*/
 
     private List<AnsweredQuestion> mapAnsweredQuestions(List<AnsweredQuestionRequest> answeredQuestionRequests, Result result) {
         List<AnsweredQuestion> retList = new ArrayList<>();
@@ -113,4 +97,5 @@ public class ResultService {
     }
 
 
+    public List<Result> getResultsByTestId(Long testId) {return resultRepository.findAllByTestId(testId); }
 }

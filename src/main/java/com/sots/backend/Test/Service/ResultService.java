@@ -3,20 +3,17 @@ package com.sots.backend.Test.Service;
 import com.sots.backend.Test.DTO.Request.AnsweredQuestionRequest;
 import com.sots.backend.Test.DTO.Request.ResultRequest;
 import com.sots.backend.Test.DTO.Response.ResultTestResponse;
-import com.sots.backend.Test.DTO.Response.StudentResultTestResponse;
+import com.sots.backend.Test.DTO.Response.StudentResultResponse;
 import com.sots.backend.Test.Mapper.TestMapper;
 import com.sots.backend.Test.Model.*;
 import com.sots.backend.Test.Repository.*;
 import com.sots.backend.User.Model.User;
 import com.sots.backend.User.Repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ResultService {
@@ -71,6 +68,31 @@ public class ResultService {
     }
 
 
+    //  Uzimamo listu rezultata i mapiramo sa dto malo
+    public List<StudentResultResponse> getResultsByTestId(Long testId) {
+
+        List<Result> results = resultRepository.findAllByTestId(testId);
+
+        return results.stream()
+                .map(r -> {
+                    List<AnsweredQuestion> answeredQuestionList =
+                            answeredQuestionRepository.findByResultId(r.getId());
+
+                    ResultTestResponse testDto =
+                            testMapper.toResultTestResponse(r.getTest(), answeredQuestionList);
+
+                    return StudentResultResponse.builder()
+                            .studentId(r.getStudent().getId())
+                            .studentName(r.getStudent().getUsername() + " (" + r.getStudent().getEmail() + ")") //  Moramo username i mail posto nemamo ime/prezime
+
+                            .result(testDto)
+                            .build();
+                })
+                .toList();
+    }
+
+
+
     private List<AnsweredQuestion> mapAnsweredQuestions(List<AnsweredQuestionRequest> answeredQuestionRequests, Result result) {
         List<AnsweredQuestion> retList = new ArrayList<>();
         for (AnsweredQuestionRequest request : answeredQuestionRequests) {
@@ -97,5 +119,4 @@ public class ResultService {
     }
 
 
-    public List<Result> getResultsByTestId(Long testId) {return resultRepository.findAllByTestId(testId); }
 }

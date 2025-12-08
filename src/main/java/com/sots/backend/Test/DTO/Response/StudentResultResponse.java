@@ -5,9 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class StudentResultTestResponse {
-    private Long resultId;
+public class StudentResultResponse {
     private Long studentId;
     private String studentName;
-    private ResultTestResponse test;
+    private ResultTestResponse result;
 }

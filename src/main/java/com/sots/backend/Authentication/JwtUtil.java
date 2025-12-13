@@ -18,7 +18,7 @@ public class JwtUtil {      //  Helps manage web token
                 .claim("role", role)  // Adding the role as a custom claim
                 .claim("id", id)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 60)) // 1 hour
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

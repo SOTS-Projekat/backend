@@ -11,4 +11,7 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
     boolean existsByLabelIgnoreCase(@Param("label") String label);
 
     Node findByFrontendId(String frontendId);
+
+    void deleteByKnowledgeDomainId(Long knowledgeDomainId);
+
 }

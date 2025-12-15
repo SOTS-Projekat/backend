@@ -42,7 +42,7 @@ public class TestController {
         Test t = testMapper.createTestDTOtoEntity(test);
         List<Question> questions = questionMapper.questionDtoToList(test.getQuestions());
         List<Answer> answers = answerMapper.answerDtoToList(test.getQuestions());
-        return ResponseEntity.ok(testService.createTest(t, questions, answers));
+        return ResponseEntity.ok(testService.createTest(t, questions, answers, test.getProfessorId()));
     }
 
     @GetMapping("/{id}")

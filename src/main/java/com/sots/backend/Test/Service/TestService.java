@@ -10,6 +10,7 @@ import com.sots.backend.Test.Repository.TestRepository;
 import com.sots.backend.User.DTO.UserRegistrationDTO;
 import com.sots.backend.User.Model.Role;
 import com.sots.backend.User.Model.User;
+import com.sots.backend.User.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +26,21 @@ public class TestService {
     private AnswerRepository answerRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public Test createTest(Test test, List<Question> questions, List<Answer> answers) {
+    public Test createTest(Test test, List<Question> questions, List<Answer> answers, Long professorId) {
+
+        User professor = userRepository.findById(professorId)
+                .orElseThrow(() -> new RuntimeException("Professor not found: " + professorId));
+
+        test.setProfessor(professor);
+
         Test savedTest = testRepository.save(test);
         List<Question> savedQuestions = questionRepository.saveAll(linkTestToQuestions(questions, savedTest));
         linkQuestionToAnswer(answers, savedQuestions);
-        List<Answer> savedAnswers = answerRepository.saveAll(answers);
+        answerRepository.saveAll(answers);
+
         return testRepository.findById(savedTest.getId()).orElseThrow();
     }
 

@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class TestResponse {
     private Long id;
+    private Long professorId;
     private String title;
     private List<QuestionResponse> questions;
     private boolean solved;

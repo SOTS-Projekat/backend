@@ -62,6 +62,7 @@ public class KnowledgeDomainController {
 
     @GetMapping("/getRealKnowledgeDomain/{id}")
     public ResponseEntity<KnowledgeDomainResponse> getRealKnowledgeDomain(@PathVariable Long id) {
+        System.out.println("HIT getRealKnowledgeDomain id=" + id);
         KnowledgeDomainResponse domain = knowledgeDomainService.getRealKnowledgeDomain(id);
         return ResponseEntity.ok(domain);
     }

@@ -53,6 +53,7 @@ public class KnowledgeDomainService {
     private ResultRepository resultRepository;
     @Autowired
     private KSFlaskService ksFlaskService;
+
     @Transactional
     public KnowledgeDomainResponse getRealKnowledgeDomain(Long id){
         KnowledgeDomain knowledgeDomain = testRepository.findKnowledgeDomainByTestId(id);

@@ -39,6 +39,7 @@ public class TestMapper {
         TestResponse testDTO = new TestResponse();
         testDTO.setId(test.getId());
         testDTO.setTitle(test.getTitle());
+        testDTO.setProfessorId(test.getProfessor().getId());
         testDTO.setQuestions(test.getQuestions().stream()
                 .map(TestMapper::toQuestionResponse)
                 .collect(Collectors.toList()));

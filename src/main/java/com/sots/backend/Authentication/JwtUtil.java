@@ -8,14 +8,14 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Component
-public class JwtUtil {      //  Helps manage web token
+public class JwtUtil {
 
-    private final String SECRET_KEY = "SOTS"; // Replace with a secure key
+    private final String SECRET_KEY = "SOTS";
 
     public String generateToken(String username, String role, Long id) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role)  // Adding the role as a custom claim
+                .claim("role", role)
                 .claim("id", id)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour

@@ -55,9 +55,22 @@ public class KnowledgeDomainService {
     private KSFlaskService ksFlaskService;
 
     @Transactional
-    public KnowledgeDomainResponse getRealKnowledgeDomain(Long id){
-        KnowledgeDomain knowledgeDomain = testRepository.findKnowledgeDomainByTestId(id);
-        List<Result> resultList = resultRepository.findAllByTestId(id);
+    public KnowledgeDomainResponse getRealKnowledgeDomain(Long knowledgeDomainId){ //  Ovde nam je input knowledgeDomain id posto na FE nemamo podatke o testu
+
+        Test test = testRepository.findFirstByKnowledgeDomainId(knowledgeDomainId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "No test found for knowledgeDomainId=" + knowledgeDomainId));
+
+        Long testId = test.getId();
+
+        KnowledgeDomain knowledgeDomain = knowledgeDomainRepository.findById(knowledgeDomainId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "KnowledgeDomain not found id=" + knowledgeDomainId));
+
+        List<Result> resultList = resultRepository.findAllByTestId(testId);
+
+        System.out.println("[getRealKnowledgeDomain] id=" + knowledgeDomainId + " resultList.size=" + resultList.size());
+
         int[][] matrix = generateMatrix(resultList);
 
         int[][] result = ksFlaskService.getIITAImplications(matrix).block();    //odavde se dobijaju realne implikacije, na osnovu kojih znamo kako su cvorovi zapravo povezani (kako zapravo treba da se uci)

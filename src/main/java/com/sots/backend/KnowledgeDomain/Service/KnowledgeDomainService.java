@@ -73,6 +73,26 @@ public class KnowledgeDomainService {
 
         int[][] matrix = generateMatrix(resultList);
 
+        List<Node> orderedNodes = getSortedNodesFromResults(resultList);
+
+        Map<String, Object> domain = new HashMap<>();
+        domain.put("id", knowledgeDomain.getId());
+        domain.put("name", knowledgeDomain.getName() + "_REAL");
+        domain.put("sourceDomainId", knowledgeDomain.getId());
+
+        Map<String, Object> kst = new HashMap<>();
+        kst.put("algorithm", "iita");
+        kst.put("v", 1);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("domain", domain);
+        payload.put("items", buildItemsFromNodes(orderedNodes));
+        payload.put("matrix", matrix);
+        payload.put("kst", kst);
+
+        String richResponseJson = ksFlaskService.getIitaRich(payload).block();
+        //System.out.println("KST rich response: " + richResponseJson);
+
         int[][] result = ksFlaskService.getIITAImplications(matrix).block();    //odavde se dobijaju realne implikacije, na osnovu kojih znamo kako su cvorovi zapravo povezani (kako zapravo treba da se uci)
 
         if (result == null) {
@@ -102,6 +122,21 @@ public class KnowledgeDomainService {
         }
         return nodes;
     }
+
+    private List<Map<String, Object>> buildItemsFromNodes(List<Node> nodes) {   //  Ovo cemo poslati u KST zbog enerisanja ontologije
+        List<Map<String, Object>> items = new ArrayList<>();
+        for (int col = 0; col < nodes.size(); col++) {
+            Node n = nodes.get(col);
+
+            Map<String, Object> item = new HashMap<>();
+            item.put("col", col);
+            item.put("nodeId", n.getId());
+            item.put("label", n.getLabel()); // adjust if your field differs
+            items.add(item);
+        }
+        return items;
+    }
+
 
     private KnowledgeDomain generateRealKnowledgeDomainFromImplications(int[][] implications, List<Result> results) {
         List<Node> nodes = getSortedNodesFromResults(results);
@@ -161,7 +196,6 @@ public class KnowledgeDomainService {
             }
         }
 
-        //System.out.println(Arrays.deepToString(matrix));
         return matrix;
     }
 

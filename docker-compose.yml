@@ -1,0 +1,103 @@
+# SOTS full stack: Postgres + Spring Boot backend + KST (Flask/IITA) + React frontend
+#
+#   Run from this folder (backend/). Expects the frontend and kst repos next to it:
+#     SOTS/backend  SOTS/frontend  SOTS/kst
+#
+#   docker compose up -d --build
+#
+#   Frontend:  http://localhost:5173   (login: user2 / sifra  -> professor with 4 seeded domains)
+#   Backend:   http://localhost:8080
+#   Postgres:  localhost:5433  (db SOTS, postgres / password)
+#   OWL files: ../kst/exports  (written when a professor opens a domain's Edit page)
+#   GraphDB:   http://localhost:7200  (repository "sots", OWL files auto-loaded)
+
+name: sots
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: SOTS
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"   # 5432 is usually taken by a locally installed Postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d SOTS"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  kst:
+    build: ../kst
+    environment:
+      # Optional: IRI/URL of schema.owl to add as owl:imports in generated files (empty = self-contained)
+      OWL_SCHEMA_IMPORT: ${OWL_SCHEMA_IMPORT:-}
+    volumes:
+      - ../kst/exports:/app/exports
+
+  backend:
+    build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/SOTS
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      KST_URL: http://kst:5000
+    ports:
+      - "8080:8080"   # the frontend calls http://localhost:8080 directly
+    depends_on:
+      db:
+        condition: service_healthy
+      kst:
+        condition: service_started
+
+  # One-shot: waits for Hibernate to create the tables, then loads docker/seed/seed.sql
+  seed:
+    image: postgres:17-alpine
+    environment:
+      PGHOST: db
+      PGDATABASE: SOTS
+      PGUSER: postgres
+      PGPASSWORD: password
+    volumes:
+      - ./docker/seed:/seed:ro
+    entrypoint: ["sh", "/seed/seed.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    restart: "no"
+
+  frontend:
+    build: ../frontend
+    ports:
+      - "5173:80"     # backend CORS allows http://localhost:5173
+    depends_on:
+      - backend
+
+  # RDF database with a visual graph explorer + SPARQL for the generated OWL files
+  graphdb:
+    image: ontotext/graphdb:10.8.5
+    environment:
+      GDB_JAVA_OPTS: -Xmx1g
+    ports:
+      - "7200:7200"
+    volumes:
+      - graphdb-data:/opt/graphdb/home
+
+  # Creates the "sots" repository and (re)loads ../kst/exports/*.owl whenever a file changes
+  graphdb-sync:
+    image: curlimages/curl:8.11.1
+    entrypoint: ["sh", "/graphdb/sync.sh"]
+    volumes:
+      - ./docker/graphdb:/graphdb:ro
+      - ../kst/exports:/owl:ro
+    depends_on:
+      - graphdb
+
+volumes:
+  db-data:
+  graphdb-data:

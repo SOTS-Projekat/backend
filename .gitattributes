@@ -1,2 +1,5 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# Shell scripts run inside Linux containers - keep LF on Windows checkouts
+*.sh text eol=lf
